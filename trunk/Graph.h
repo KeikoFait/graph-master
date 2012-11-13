@@ -14,7 +14,7 @@ class Graph
 public:
 	Graph();
 	bool makeGraph(string url, unsigned short int repr);
-	bool outputInfo(unsigned short int repr);
+	bool outputInfo();
 	void BFS(unsigned long long root);
 	void DFS(unsigned long long root);
 	void conComp();
@@ -22,6 +22,7 @@ public:
 
 private:
 	//File read and output attributes
+	unsigned short int reprStruct;
 	unsigned long long numV;
 	unsigned long long numA;
 
@@ -33,13 +34,9 @@ private:
 	//Method to get coordinates in vector for adjacency matrix
 	unsigned long long getPos(unsigned long long* x, unsigned long long* y);
 
-	//Methods to measure the average degree of the vertices
-	double avgDegreeList(vector <vector<unsigned long long> >* aList);
-	double avgDegreeMatrix(vector <bool>* aMatrix);
-
-	//Method to get the vetices empyrical distribution of degrees
-	vector<unsigned long long>* distEmpList(vector <vector<unsigned long long> >* aList);
-	vector<unsigned long long>* distEmpMatrix(vector <bool>* aMatrix);
+	//Method to get the vetices empyrical distribution of degrees and their average degree
+	double degreeInfoList(vector <vector<unsigned long long> >* aList, vector<unsigned long long>* distEmp);
+	double degreeInfoMatrix(vector <bool>* aMatrix, vector<unsigned long long>* distEmp);
 
 	//Methods to print graph on screen
 	void printMatrix();
