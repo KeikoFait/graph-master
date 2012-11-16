@@ -4,7 +4,7 @@
 #include <iostream>
 #include <iomanip>
 #include <vector>
-
+#include <deque>
 
 using namespace std;
 
@@ -43,7 +43,6 @@ bool Graph::makeGraph(string url, unsigned short int repr)
 	if (reprStruct == 1)
 	//Represent graph as an adjacency matrix
 	{
-		delete adjList;
 		adjMatrix = new vector<bool> (numV*numV, false);
 		while (!file.eof())
 		{
@@ -56,7 +55,6 @@ bool Graph::makeGraph(string url, unsigned short int repr)
 	else
 	//Represent graph as an adjacency list
 	{
-		delete adjMatrix;
 		adjList = new vector< vector<unsigned long long> >(numV, vector<unsigned long long>());
 		while (!file.eof())
 		{
@@ -144,6 +142,44 @@ double Graph::degreeInfoMatrix(vector<bool>* aMatrix, vector<unsigned long long>
 	return med;
 }
 
+
+void Graph::BFS(unsigned long long root)
+{
+	unsigned long long v, i, discoveredComp;
+	vector<unsigned long long> discoverVert (numV, 0);
+	deque<unsigned long long> q;
+	vector<unsigned long long>* neighbours;
+
+	discoveredComp = 1;
+	discoverVert.at(root-1) = discoveredComp;
+	printVector(&discoverVert); //test print
+	q.push_back(root);
+
+	while (!q.empty())
+	{
+		v = q.front();
+		q.pop_front();
+		neighbours = getNeighboursList(v);
+		for (i = 0; i < neighbours->size(); i++)
+		{
+			if (discoverVert.at(neighbours->at(i)-1) < discoveredComp)
+			{
+				discoverVert.at(neighbours->at(i)-1) = discoveredComp;
+				printVector(&discoverVert);		//test print
+				q.push_back(neighbours->at(i));
+			}
+		}
+	}
+}
+
+
+vector<unsigned long long>* Graph::getNeighboursList(unsigned long long v)
+{
+	return &(adjList->at(v-1));
+}
+
+
+
 unsigned long long Graph::getPos(unsigned long long* x, unsigned long long* y)
 {
 	//Access value in matrix: adjMatrix (i*size + j); -1 because the vertices starts at 1 and indexes at 0
@@ -178,13 +214,24 @@ void Graph::printList()
 	}
 }
 
+void Graph::printVector(vector<unsigned long long>* v)
+{
+	unsigned long long i;
+	for (i = 0; i < v->size(); i++)
+	{
+		cout << v->at(i) << " ";
+	}
+	cout << endl;
+}
+
 int main()
 {
 	cout << "rodou!" << endl;
 	Graph* graph = new Graph();
-	graph->makeGraph("teste_graph.txt", 1);
+	graph->makeGraph("teste_graph.txt", 2);
 	//Output info about graph to a file
 	graph->outputInfo();
+	graph->BFS(2);
 	cin.ignore();
 
 	return 0;
