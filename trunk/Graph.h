@@ -30,6 +30,10 @@ private:
 	vector <bool>* adjMatrix;
 	vector <vector<unsigned long long> >* adjList;
 
+	
+	//Methods to get the neighbours of a vertice
+	vector<unsigned long long>* getNeighboursList(unsigned long long v);
+	vector<unsigned long long>* getNeighboursMatrix(unsigned long long v);
 
 	//Method to get coordinates in vector for adjacency matrix
 	unsigned long long getPos(unsigned long long* x, unsigned long long* y);
@@ -39,6 +43,7 @@ private:
 	double degreeInfoMatrix(vector <bool>* aMatrix, vector<unsigned long long>* distEmp);
 
 	//Methods to print graph on screen
+	void printVector(vector<unsigned long long>* v);
 	void printMatrix();
 	void printList();
 };
