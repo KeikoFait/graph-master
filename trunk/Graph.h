@@ -1,4 +1,6 @@
 #pragma once
+#include <iostream>
+using std::ofstream;
 
 #include <string>
 using std::string;
@@ -13,10 +15,9 @@ class Graph
 {
 public:
 	Graph();
-	bool makeGraph(string url, unsigned short int repr);
+	bool makeGraph(string url, short int repr);
 	bool outputInfo();
-	void BFS(unsigned long long root);
-	void DFS(unsigned long long root);
+	void searchGraph(unsigned long long root, short int searchMethod);
 	void conComp();
 	~Graph();
 
@@ -29,8 +30,11 @@ private:
 	//Graph representation attributes
 	vector <bool>* adjMatrix;
 	vector <vector<unsigned long long> >* adjList;
-
 	
+	//BFS and DFS search methods
+	unsigned long long BFS(unsigned long long root, ofstream& file, unsigned long long* compNum, bool* moreComp, vector<unsigned long long>* discoverVert, vector< vector<unsigned long long>>* components);
+	unsigned long long DFS(unsigned long long root, ofstream& file, unsigned long long* compNum, bool* moreComp, vector<unsigned long long>* discoverVert, vector< vector<unsigned long long>>* components);
+
 	//Methods to get the neighbours of a vertice
 	vector<unsigned long long>* getNeighboursList(unsigned long long v);
 	vector<unsigned long long>* getNeighboursMatrix(unsigned long long v);
