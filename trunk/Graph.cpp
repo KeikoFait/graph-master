@@ -5,6 +5,7 @@
 #include <iomanip>
 #include <vector>
 #include <deque>
+#include <algorithm>
 
 using namespace std;
 
@@ -34,7 +35,6 @@ bool Graph::makeGraph(string url, short int repr)
 	if (!file.is_open())
 	{
 		cout << "Error while opening file!" << endl;
-		cin.ignore();
 		return false;
 	}
 	//Read first line with number of vertices
@@ -77,7 +77,6 @@ bool Graph::outputInfo()
 	if (!file.is_open())
 	{
 		cerr << "Error while opening file!" << endl;
-		cin.ignore();
 		return false;
 	}
 	//Writing number of vertices and edges to file
@@ -165,19 +164,41 @@ void Graph::searchGraph(unsigned long long root, short int searchMethod)
 			//DFS
 			root = DFS(root, searchFile, &compNum, &moreComp, &discoverVert, &components);
 	}
+    
+    //Sorting components
+    sort(components.begin(), components.end(), greaterComp);
 
 	//Writing components information to file
 	compFile << "Number of components: " << compNum << "\n" << endl;
+    for (unsigned long long i = 0; i < components.size(); i++)
+    {
+        for (unsigned long long j = 0; j < components.at(i).size(); j++)
+        {
+            if (j == 0)
+                compFile << "Componente " << i + 1 << ": " << components.at(i).size() - 1 << " vertices\nVertices: " ;
+            else
+                compFile << components.at(i).at(j) << " ";
+        }
+        compFile << "\n" << endl;
+    }
 
 	searchFile.close();
 	compFile.close();
 }
 
-unsigned long long Graph::BFS(unsigned long long root, ofstream& file, unsigned long long* compNum, bool* moreComp, vector<unsigned long long>* discoverVert, vector< vector<unsigned long long>>* components)
+bool Graph::greaterComp(const vector<unsigned long long>& c1, const vector<unsigned long long>& c2)
+{
+    return c1.size() > c2.size();
+}
+
+unsigned long long Graph::BFS(unsigned long long root, ofstream& file, unsigned long long* compNum, bool* moreComp, vector<unsigned long long>* discoverVert, vector<vector<unsigned long long>>* components)
 {
 	unsigned long long v, i;
 	deque<unsigned long long> q;
 	vector<unsigned long long>* neighbours;
+    
+    //Using first item on component vector as the component id
+    components->at((*compNum) - 1).push_back(*compNum);
 
 	//Store the parent for each vertex
 	vector<unsigned long long> parents(numV);
@@ -208,7 +229,7 @@ unsigned long long Graph::BFS(unsigned long long root, ofstream& file, unsigned 
 		else
 			neighbours = getNeighboursMatrix(v);
 
-		file << v << " ";	//Store discovered element in the search tree on file 
+		file << v << " ";	//Store discovered element in the search tree on file
 		components->at((*compNum) - 1).push_back(v);	//Include the explorer vertex in it's component list
 
 		for (i = 0; i < neighbours->size(); i++)
@@ -233,7 +254,9 @@ unsigned long long Graph::BFS(unsigned long long root, ofstream& file, unsigned 
 			nlevelSize = 0;
 		}
 	}
-	
+    
+    
+    
 	//Writing parent and level for each vertex to file
 	file << "\n\n" << left << setw(10) << "Vertex" << setw(10) << "Parent" << setw(10) << "Level" << endl;
 	for (i = 0; i < numV; i++)
@@ -255,6 +278,9 @@ unsigned long long Graph::DFS(unsigned long long root, ofstream& file, unsigned 
 	unsigned long long v, i;
 	deque<unsigned long long> q;
 	vector<unsigned long long>* neighbours;
+    
+    //Using first item on component vector as the component id
+    components->at((*compNum) - 1).push_back(*compNum);
 
 	//Store the parent for each vertex
 	vector<unsigned long long> parents(numV);
@@ -309,7 +335,6 @@ unsigned long long Graph::DFS(unsigned long long root, ofstream& file, unsigned 
 				nlevelSize = 0;
 			}
 	}
-
 	//Writing parent and level for each vertex to file
 	file << "\n\n" << left << setw(10) << "Vertex" << setw(10) << "Parent" << setw(10) << "Level" << endl;
 	for (i = 0; i < numV; i++)
@@ -390,11 +415,10 @@ int main()
 {
 	cout << "rodou!" << endl;
 	Graph* graph = new Graph();
-	graph->makeGraph("teste_graph.txt", 2);
+	graph->makeGraph("collaboration_graph.txt", 1);
 	//Output info about graph to a file
 	graph->outputInfo();
-	graph->searchGraph(1, 1);
-	cin.ignore();
+	graph->searchGraph(4, 1);
 
 	return 0;
 }
