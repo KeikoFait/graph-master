@@ -91,7 +91,7 @@ bool Graph::outputInfo()
 		file << "d_medio = " << fixed << setprecision(1) << degreeInfoMatrix(adjMatrix, &distEmp) << endl;
  		for (unsigned long long i = 0; i < distEmp.size(); i++)
  		{
- 			file << i << " " << fixed << setprecision(2) << (double)distEmp.at(i)/numV << endl;
+ 			file << i << " " << fixed << setprecision(2) << (long double)distEmp.at(i)/numV << endl;
  		}
 	} else
 	{	
@@ -99,7 +99,7 @@ bool Graph::outputInfo()
 		file << "d_medio = " << fixed << setprecision(1) << degreeInfoList(adjList, &distEmp) << endl;
  		for (unsigned long long i = 0; i < distEmp.size(); i++)
  		{
- 			file << i << " " << fixed << setprecision(2) << (double)distEmp.at(i)/numV << endl;
+ 			file << i << " " << fixed << setprecision(2) << (long double)distEmp.at(i)/numV << endl;
  		}
 	}
 	file.close();
@@ -112,9 +112,9 @@ double Graph::degreeInfoList(vector<vector<unsigned long long> >* aList, vector<
 	for(unsigned long long i = 0; i < aList->size(); i++)
 	{
 		med += aList->at(i).size();
-		if (aList->at(i).size() > distEmp->size()) 
-			distEmp->resize(aList->at(i).size() + 1);
-		distEmp->at(aList->at(i).size()) +=  1;
+		if (aList->at(i).size() >= distEmp->size())
+			distEmp->resize(aList->at(i).size()+1);
+        distEmp->at(aList->at(i).size()) +=  1;
 	}
 	med /= aList->size();
 	return med;	
@@ -131,7 +131,7 @@ double Graph::degreeInfoMatrix(vector<bool>* aMatrix, vector<unsigned long long>
 		if ((i + 1) % numV == 0)
 		{
 			med += degree;
-			if (degree > distEmp->size())
+			if (degree >= distEmp->size())
 				distEmp->resize(degree + 1);
 			distEmp->at(degree) +=  1;
 			degree = 0;
@@ -216,7 +216,7 @@ unsigned long long Graph::BFS(unsigned long long root, ofstream& file, unsigned 
 	unsigned long long currentLevel = 0;
 	unsigned long long levelSize = 1;
 	unsigned long long nlevelSize = 0;
-	levels.at(root) = currentLevel;
+	levels.at(root - 1) = currentLevel;
 
 	while (!q.empty())
 	{
@@ -297,7 +297,7 @@ unsigned long long Graph::DFS(unsigned long long root, ofstream& file, unsigned 
 	unsigned long long currentLevel = 0;
 	unsigned long long levelSize = 1;
 	unsigned long long nlevelSize = 0;
-	levels.at(root) = currentLevel;
+	levels.at(root - 1) = currentLevel;
 
 	while (!q.empty())
 	{
@@ -418,7 +418,7 @@ int main()
 	graph->makeGraph("collaboration_graph.txt", 1);
 	//Output info about graph to a file
 	graph->outputInfo();
-	graph->searchGraph(4, 1);
+	graph->searchGraph(4, 2);
 
 	return 0;
 }

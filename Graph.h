@@ -33,13 +33,6 @@ private:
 	unsigned long long BFS(unsigned long long root, ofstream& file, unsigned long long* compNum, bool* moreComp, vector<unsigned long long>* discoverVert, vector< vector<unsigned long long>>* components);
 	unsigned long long DFS(unsigned long long root, ofstream& file, unsigned long long* compNum, bool* moreComp, vector<unsigned long long>* discoverVert, vector< vector<unsigned long long>>* components);
     
-    /*struct greaterComp {
-        bool operator()(vector<unsigned long long>* c1, vector<unsigned long long>* c2)
-        {
-            return c1->size() > c2->size();
-        }
-    };*/
-    
 	//Methods to get the neighbours of a vertice
 	vector<unsigned long long>* getNeighboursList(unsigned long long v);
 	vector<unsigned long long>* getNeighboursMatrix(unsigned long long v);
