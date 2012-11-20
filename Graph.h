@@ -8,9 +8,6 @@ using std::string;
 #include <vector>
 using std::vector;
 
-#include <list>
-using std::list;
-
 class Graph
 {
 public:
@@ -18,6 +15,7 @@ public:
 	bool makeGraph(string url, short int repr);
 	bool outputInfo();
 	void searchGraph(unsigned long long root, short int searchMethod);
+    static bool greaterComp(const vector<unsigned long long>& c1, const vector<unsigned long long>& c2);
 	void conComp();
 	~Graph();
 
@@ -34,7 +32,14 @@ private:
 	//BFS and DFS search methods
 	unsigned long long BFS(unsigned long long root, ofstream& file, unsigned long long* compNum, bool* moreComp, vector<unsigned long long>* discoverVert, vector< vector<unsigned long long>>* components);
 	unsigned long long DFS(unsigned long long root, ofstream& file, unsigned long long* compNum, bool* moreComp, vector<unsigned long long>* discoverVert, vector< vector<unsigned long long>>* components);
-
+    
+    /*struct greaterComp {
+        bool operator()(vector<unsigned long long>* c1, vector<unsigned long long>* c2)
+        {
+            return c1->size() > c2->size();
+        }
+    };*/
+    
 	//Methods to get the neighbours of a vertice
 	vector<unsigned long long>* getNeighboursList(unsigned long long v);
 	vector<unsigned long long>* getNeighboursMatrix(unsigned long long v);
